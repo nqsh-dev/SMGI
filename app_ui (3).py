@@ -563,6 +563,7 @@ st.markdown("""
 st.markdown('</div>', unsafe_allow_html=True)
 
 # ===== AUTO-REFRESH =====
-time.sleep(5)
+time.sleep(30)
 st.cache_data.clear()
 st.rerun()
+
