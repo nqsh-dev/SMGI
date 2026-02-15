@@ -1,4 +1,6 @@
-import streamlit as st import requests from datetime import datetime
+import streamlit as st 
+import requests 
+from datetime import datetime
 
 ==============================
 
@@ -158,3 +160,4 @@ FOOTER
 ==============================
 
 st.divider() st.caption(f"Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}") st.caption("System status: Online ✅")
+
