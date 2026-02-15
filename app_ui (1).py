@@ -104,7 +104,8 @@ with col_center:
 
 #==============================
 
-SENSOR_URL = "https://sufficient-puma-humiya-344b268d.koyeb.app/api/v1/sensors/latest" PREDICTION_URL = "https://sufficient-puma-humiya-344b268d.koyeb.app/api/v1/predictions/latest"
+SENSOR_URL = "https://sufficient-puma-humiya-344b268d.koyeb.app/api/v1/sensors/latest" 
+PREDICTION_URL = "https://sufficient-puma-humiya-344b268d.koyeb.app/api/v1/predictions/latest"
 
 #==============================
 
@@ -112,7 +113,11 @@ SENSOR_URL = "https://sufficient-puma-humiya-344b268d.koyeb.app/api/v1/sensors/l
 
 #==============================
 
-def fetch_data(): try: with st.spinner("Fetching real-time data..."): sensor_response = requests.get(SENSOR_URL, timeout=10) prediction_response = requests.get(PREDICTION_URL, timeout=10)
+def fetch_data(): 
+ try: 
+   with st.spinner("Fetching real-time data..."): 
+    sensor_response = requests.get(SENSOR_URL, timeout=10) 
+    prediction_response = requests.get(PREDICTION_URL, timeout=10)
 
 sensor_response.raise_for_status()
         prediction_response.raise_for_status()
@@ -167,6 +172,7 @@ with col4: st.metric( label="🔮 Temperature Prediction (1h)", value=f"{predict
 #==============================
 
 st.divider() st.caption(f"Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}") st.caption("System status: Online ✅")
+
 
 
 
