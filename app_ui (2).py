@@ -13,7 +13,7 @@ st.markdown(f"""
 <style>
 .stApp {{
     background:
-    linear-gradient(rgba(255,255,255,0.75), rgba(255,255,255,0.85)),
+    linear-gradient(rgba(255,255,255,0.60), rgba(255,255,255,0.60)),
     url("{image_url}");
 
     background-size: cover;
@@ -76,6 +76,7 @@ with col_prediction:
             st.subheader("Prediction❄")
             st.write("⁰C")
             st.write(prediction["temperature_1h"] )
+
 
 
 
