@@ -2,19 +2,19 @@ import streamlit as st
 import requests 
 from datetime import datetime
 
-==============================
+#==============================
 
-PAGE CONFIG
+#PAGE CONFIG
 
-==============================
+#==============================
 
 st.set_page_config( page_title="Smart GreenHouse Interface", page_icon="🌿", layout="wide" )
 
-==============================
+#==============================
 
-BACKGROUND IMAGE
+#BACKGROUND IMAGE
 
-==============================
+#==============================
 
 image_url = "https://tse2.mm.bing.net/th/id/OIP.mR7CJ6OBkrJnjcLs8eVRzwHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"
 
@@ -78,35 +78,35 @@ div.stButton > button {{
 
 </style>""", unsafe_allow_html=True)
 
-==============================
+#==============================
 
-HEADER
+#HEADER
 
-==============================
+#==============================
 
 st.title("🌱 Smart GreenHouse Dashboard") st.caption("Real-time environmental monitoring system")
 
-==============================
+#==============================
 
-REFRESH CONTROL
+#REFRESH CONTROL
 
-==============================
+#==============================
 
 col_left, col_center, col_right = st.columns([1,2,1]) with col_center: if st.button("🔄 Refresh Data"): st.rerun()
 
-==============================
+#==============================
 
-API ENDPOINTS
+#API ENDPOINTS
 
-==============================
+#==============================
 
 SENSOR_URL = "https://sufficient-puma-humiya-344b268d.koyeb.app/api/v1/sensors/latest" PREDICTION_URL = "https://sufficient-puma-humiya-344b268d.koyeb.app/api/v1/predictions/latest"
 
-==============================
+#==============================
 
-DATA FETCH FUNCTION
+#DATA FETCH FUNCTION
 
-==============================
+#==============================
 
 def fetch_data(): try: with st.spinner("Fetching real-time data..."): sensor_response = requests.get(SENSOR_URL, timeout=10) prediction_response = requests.get(PREDICTION_URL, timeout=10)
 
@@ -121,27 +121,27 @@ sensor_response.raise_for_status()
 except Exception as e:
     return None, None, str(e)
 
-==============================
+#==============================
 
-LOAD DATA
+#LOAD DATA
 
-==============================
+#==============================
 
 sensors, prediction, error = fetch_data()
 
-==============================
+#==============================
 
-ERROR HANDLING
+#ERROR HANDLING
 
-==============================
+#==============================
 
 if error: st.error("Unable to retrieve greenhouse data") st.caption(error) st.stop()
 
-==============================
+#==============================
 
-METRICS DISPLAY
+#METRICS DISPLAY
 
-==============================
+#==============================
 
 col1, col2, col3, col4 = st.columns(4, gap="large")
 
@@ -153,11 +153,12 @@ with col3: st.metric( label="☀ Light Intensity", value=f"{sensors['light']} lu
 
 with col4: st.metric( label="🔮 Temperature Prediction (1h)", value=f"{prediction['temperature_1h']} °C" )
 
-==============================
+#==============================
 
-FOOTER
+#FOOTER
 
-==============================
+#==============================
 
 st.divider() st.caption(f"Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}") st.caption("System status: Online ✅")
+
 
