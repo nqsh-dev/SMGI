@@ -119,13 +119,13 @@ def fetch_data():
     sensor_response = requests.get(SENSOR_URL, timeout=10) 
     prediction_response = requests.get(PREDICTION_URL, timeout=10)
 
-sensor_response.raise_for_status():
-        prediction_response.raise_for_status()
+    sensor_response.raise_for_status()
+    prediction_response.raise_for_status()
 
-        sensors = sensor_response.json()
-        prediction = prediction_response.json()
+    sensors = sensor_response.json()
+    prediction = prediction_response.json()
 
-        return sensors, prediction, None
+    return sensors, prediction, None
 
 except Exception as e:
     return None, None, str(e)
@@ -172,6 +172,7 @@ with col4: st.metric( label="🔮 Temperature Prediction (1h)", value=f"{predict
 #==============================
 
 st.divider() st.caption(f"Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}") st.caption("System status: Online ✅")
+
 
 
 
