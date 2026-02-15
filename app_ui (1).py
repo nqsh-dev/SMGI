@@ -84,7 +84,8 @@ div.stButton > button {{
 
 #==============================
 
-st.title("🌱 Smart GreenHouse Dashboard") st.caption("Real-time environmental monitoring system")
+st.title("🌱 Smart GreenHouse Dashboard") 
+st.caption("Real-time environmental monitoring system")
 
 #==============================
 
@@ -92,7 +93,8 @@ st.title("🌱 Smart GreenHouse Dashboard") st.caption("Real-time environmental 
 
 #==============================
 
-col_left, col_center, col_right = st.columns([1,2,1]) with col_center: if st.button("🔄 Refresh Data"): st.rerun()
+col_left, col_center, col_right = st.columns([1,2,1]) 
+with col_center: if st.button("🔄 Refresh Data"): st.rerun()
 
 #==============================
 
@@ -160,5 +162,6 @@ with col4: st.metric( label="🔮 Temperature Prediction (1h)", value=f"{predict
 #==============================
 
 st.divider() st.caption(f"Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}") st.caption("System status: Online ✅")
+
 
 
