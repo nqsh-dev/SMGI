@@ -41,10 +41,10 @@ st.markdown(""" <style>
 color: #000000;
 }
 </style> """, unsafe_allow_html=True)
-url = "https://actual-reindeer-humiya-11975376.koyeb.app/api/v1/sensors/latest"
+url = "https://sufficient-puma-humiya-344b268d.koyeb.app/api/v1/sensors/latest"
 response = requests.get(url)
 data = response.json()
-url1 = "https://actual-reindeer-humiya-11975376.koyeb.app/api/v1/predictions/latest"
+url1 = "https://sufficient-puma-humiya-344b268d.koyeb.app/api/v1/predictions/latest"
 response1 = requests.get(url1)
 prediction = response1.json()
 
@@ -76,6 +76,7 @@ with col_prediction:
             st.subheader("Prediction❄")
             st.write("⁰C")
             st.write(prediction["temperature_1h"] )
+
 
 
 
