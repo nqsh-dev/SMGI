@@ -94,7 +94,9 @@ st.caption("Real-time environmental monitoring system")
 #==============================
 
 col_left, col_center, col_right = st.columns([1,2,1]) 
-with col_center: if st.button("🔄 Refresh Data"): st.rerun()
+with col_center: 
+if st.button("🔄 Refresh Data"):
+   st.rerun()
 
 #==============================
 
@@ -137,7 +139,10 @@ sensors, prediction, error = fetch_data()
 
 #==============================
 
-if error: st.error("Unable to retrieve greenhouse data") st.caption(error) st.stop()
+if error: 
+ st.error("Unable to retrieve greenhouse data") 
+ st.caption(error) 
+ st.stop()
 
 #==============================
 
@@ -162,6 +167,7 @@ with col4: st.metric( label="🔮 Temperature Prediction (1h)", value=f"{predict
 #==============================
 
 st.divider() st.caption(f"Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}") st.caption("System status: Online ✅")
+
 
 
 
