@@ -1,93 +1,568 @@
 import streamlit as st
 import requests
+from datetime import datetime
+import time
 
+# ===== CONFIGURATION =====
+st.set_page_config(
+    page_title="HUAWEI Smart Greenhouse",
+    page_icon="🌱",
+    layout="centered",
+    initial_sidebar_state="collapsed"
+)
 
-box = st.container()
-st.set_page_config(page_icon="☁", page_title="Smart GreenHouse Interface")
-st.toast("Welcome", icon ="😉")
-st.header("Welcome to our User Interface", text_alignment="center")
-image_url="data:image/webp;base64,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"
+# ===== API CONFIG =====
+API_URL = "https://sufficient-puma-humiya-344b268d.koyeb.app/api/v1"
 
-
-st.markdown(f"""
+# ===== HUAWEI HARMONYOS INSPIRED CSS =====
+st.markdown("""
 <style>
-.stApp {{
-    background:
-    linear-gradient(rgba(255,255,255,0.60), rgba(255,255,255,0.60)),
-    url("{image_url}");
+    /* Import HarmonyOS Sans font */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-}}
+    /* Global Styles */
+    * {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-.block-container {{
-    backdrop-filter: blur(4px);
-    background-color: rgba(255,255,255,0.25);
-    border-radius: 12px;
-    padding: 2rem;
-}}
+    /* Main App Container - Huawei's signature gradient */
+    .stApp {
+        background: linear-gradient(145deg, #f5f7fa 0%, #e9edf2 100%);
+        min-height: 100vh;
+    }
+
+    /* Main Container with comfortable padding */
+    .main-container {
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 24px 20px;
+    }
+
+    /* Header Section - Huawei's clean card design */
+    .header {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 32px;
+        padding: 28px 24px;
+        margin-bottom: 32px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        animation: slideDown 0.5s ease-out;
+    }
+
+    @keyframes slideDown {
+        from { transform: translateY(-20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    .header-title {
+        font-size: 28px;
+        font-weight: 600;
+        color: #1a2639;
+        margin-bottom: 12px;
+        letter-spacing: -0.3px;
+    }
+
+    .header-subtitle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #5a6874;
+        font-size: 14px;
+        font-weight: 400;
+    }
+
+    .live-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(52, 199, 89, 0.1);
+        padding: 6px 14px;
+        border-radius: 30px;
+        color: #34c759;
+        font-weight: 500;
+    }
+
+    .live-dot {
+        width: 8px;
+        height: 8px;
+        background: #34c759;
+        border-radius: 50%;
+        animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+        0% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(1.2); }
+        100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* Metrics Grid - Spacious and elegant */
+    .metrics-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 32px;
+        animation: fadeIn 0.6s ease-out 0.2s both;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Huawei's signature frosted glass cards */
+    .metric-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 28px;
+        padding: 24px 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    .metric-card:hover {
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+        transform: translateY(-2px);
+    }
+
+    .metric-card:active {
+        transform: scale(0.98);
+    }
+
+    .metric-icon {
+        font-size: 28px;
+        margin-bottom: 16px;
+        color: #1a2639;
+    }
+
+    .metric-label {
+        font-size: 12px;
+        font-weight: 500;
+        color: #8e9aab;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 8px;
+    }
+
+    .metric-value-wrapper {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+    }
+
+    .metric-value {
+        font-size: 40px;
+        font-weight: 600;
+        color: #1a2639;
+        line-height: 1;
+    }
+
+    .metric-unit {
+        font-size: 14px;
+        font-weight: 400;
+        color: #8e9aab;
+    }
+
+    .metric-trend {
+        margin-top: 12px;
+        font-size: 12px;
+        color: #5a6874;
+    }
+
+    /* Prediction Section - Huawei's gradient cards */
+    .prediction-section {
+        background: linear-gradient(145deg, #2b3440 0%, #1e2632 100%);
+        border-radius: 32px;
+        padding: 28px 24px;
+        margin-bottom: 32px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        animation: slideUp 0.6s ease-out 0.4s both;
+    }
+
+    @keyframes slideUp {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    .prediction-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 16px;
+        font-weight: 500;
+        margin-bottom: 24px;
+    }
+
+    .prediction-badge {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 4px 12px;
+        border-radius: 30px;
+        font-size: 11px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .prediction-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .prediction-item {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 24px;
+        padding: 18px 16px;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .prediction-item:hover {
+        background: rgba(255, 255, 255, 0.08);
+        transform: translateY(-2px);
+    }
+
+    .prediction-label {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.5);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+    }
+
+    .prediction-value {
+        font-size: 26px;
+        font-weight: 600;
+        color: white;
+    }
+
+    .prediction-unit {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.4);
+        margin-left: 4px;
+    }
+
+    /* Status Section */
+    .status-section {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 32px;
+        padding: 24px;
+        margin-bottom: 32px;
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        animation: fadeIn 0.6s ease-out 0.6s both;
+    }
+
+    .status-title {
+        font-size: 14px;
+        font-weight: 500;
+        color: #1a2639;
+        margin-bottom: 20px;
+    }
+
+    .status-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+
+    .status-item {
+        background: white;
+        border-radius: 20px;
+        padding: 16px 12px;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    }
+
+    .status-label {
+        font-size: 11px;
+        color: #8e9aab;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-value {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1a2639;
+    }
+
+    /* Refresh Button - Huawei style */
+    .refresh-btn {
+        background: white;
+        border: none;
+        border-radius: 30px;
+        padding: 18px;
+        font-size: 15px;
+        font-weight: 500;
+        color: #1a2639;
+        width: 100%;
+        text-align: center;
+        cursor: pointer;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+        transition: all 0.3s ease;
+        animation: fadeIn 0.6s ease-out 0.8s both;
+        margin-bottom: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .refresh-btn:hover {
+        background: #f8faff;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+        transform: translateY(-2px);
+    }
+
+    .refresh-btn:active {
+        transform: scale(0.98);
+    }
+
+    /* Footer */
+    .footer {
+        text-align: center;
+        padding: 24px 0 16px;
+        color: #8e9aab;
+        font-size: 11px;
+        border-top: 1px solid rgba(142, 154, 171, 0.2);
+        animation: fadeIn 0.6s ease-out 1s both;
+    }
+
+    /* Loading Animation */
+    .loading-spinner {
+        width: 44px;
+        height: 44px;
+        border: 3px solid rgba(26, 38, 57, 0.05);
+        border-top-color: #1a2639;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 60px auto;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 380px) {
+        .metric-value {
+            font-size: 32px;
+        }
+        .prediction-value {
+            font-size: 22px;
+        }
+        .status-grid {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        .metrics-grid {
+            gap: 16px;
+        }
+    }
+
+    /* Hide Streamlit branding */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    .stDeployButton {display: none;}
 </style>
 """, unsafe_allow_html=True)
 
 
+# ===== DATA FETCHING =====
+@st.cache_data(ttl=5)
+def get_latest_data():
+    try:
+        r = requests.get(f"{API_URL}/sensors/latest", timeout=3)
+        return r.json() if r.status_code == 200 else None
+    except:
+        return None
 
 
-
-st.markdown(""" <style>
-.stApp {
-
-color: #000000;
-}
-</style> """, unsafe_allow_html=True)
-url = "https://sufficient-puma-humiya-344b268d.koyeb.app/api/v1/sensors/latest"
-response = requests.get(url)
-data = response.json()
-url1 = "https://sufficient-puma-humiya-344b268d.koyeb.app/api/v1/predictions/latest"
-response1 = requests.get(url1)
-prediction = response1.json()
-
-col_temp, col_humidity, col_lux, col_prediction = st.columns(4, gap="xxlarge", vertical_alignment="center")
+@st.cache_data(ttl=10)
+def get_prediction():
+    try:
+        r = requests.get(f"{API_URL}/predictions/latest", timeout=3)
+        return r.json() if r.status_code == 200 else None
+    except:
+        return None
 
 
-
-with col_temp:
-     with st.container(border=True):
-        st.subheader("Temperature🌡")
-        st.write("⁰C")
-        st.write(data["temperature"] )
-
-with col_humidity:
-     with st.container(border=True):
-        st.subheader("Humidity💧")
-        st.write("%")
-        st.write(data["humidity"] )
+@st.cache_data(ttl=60)
+def get_training_status():
+    try:
+        r = requests.get(f"{API_URL}/training/status", timeout=3)
+        return r.json() if r.status_code == 200 else None
+    except:
+        return None
 
 
-with col_lux:
-     with st.container(border=True):
-        st.subheader("Light Intensity🔥")
-        st.write("lux")
-        st.write(data["light"] )
+# ===== FETCH DATA =====
+data = get_latest_data()
+prediction = get_prediction()
+training_status = get_training_status()
 
-with col_prediction:
-        with st.container(border=True):
-            st.subheader("Prediction❄")
-            st.write("⁰C")
-            st.write(prediction["temperature_1h"] )
+# ===== MAIN CONTAINER =====
+st.markdown('<div class="main-container">', unsafe_allow_html=True)
 
+# ===== HEADER =====
+st.markdown(f"""
+<div class='header'>
+    <div class='header-title'>🌱 Smart Greenhouse</div>
+    <div class='header-subtitle'>
+        <span>{datetime.now().strftime('%B %d, %Y • %I:%M %p')}</span>
+        <span class='live-indicator'>
+            <span class='live-dot'></span>
+            Live
+        </span>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
+# ===== METRICS GRID (Spacious) =====
+if data:
+    st.markdown('<div class="metrics-grid">', unsafe_allow_html=True)
 
+    # Temperature
+    st.markdown(f"""
+    <div class='metric-card'>
+        <div class='metric-icon'>🌡️</div>
+        <div class='metric-label'>TEMPERATURE</div>
+        <div class='metric-value-wrapper'>
+            <span class='metric-value'>{data['temperature']:.1f}</span>
+            <span class='metric-unit'>°C</span>
+        </div>
+        <div class='metric-trend'>Normal range 20-25°C</div>
+    </div>
+    """, unsafe_allow_html=True)
 
+    # Humidity
+    st.markdown(f"""
+    <div class='metric-card'>
+        <div class='metric-icon'>💧</div>
+        <div class='metric-label'>HUMIDITY</div>
+        <div class='metric-value-wrapper'>
+            <span class='metric-value'>{data['humidity']:.1f}</span>
+            <span class='metric-unit'>%</span>
+        </div>
+        <div class='metric-trend'>Optimal 60-70%</div>
+    </div>
+    """, unsafe_allow_html=True)
 
+    # Light
+    st.markdown(f"""
+    <div class='metric-card'>
+        <div class='metric-icon'>☀️</div>
+        <div class='metric-label'>LIGHT</div>
+        <div class='metric-value-wrapper'>
+            <span class='metric-value'>{data['light']:.0f}</span>
+            <span class='metric-unit'>lux</span>
+        </div>
+        <div class='metric-trend'>Min 10,000 lux needed</div>
+    </div>
+    """, unsafe_allow_html=True)
 
+    # Soil
+    st.markdown(f"""
+    <div class='metric-card'>
+        <div class='metric-icon'>🌱</div>
+        <div class='metric-label'>SOIL</div>
+        <div class='metric-value-wrapper'>
+            <span class='metric-value'>{data['soil_moisture']:.1f}</span>
+            <span class='metric-unit'>%</span>
+        </div>
+        <div class='metric-trend'>Ideal 50-65%</div>
+    </div>
+    """, unsafe_allow_html=True)
 
+    st.markdown('</div>', unsafe_allow_html=True)
+else:
+    st.markdown("<div class='loading-spinner'></div>", unsafe_allow_html=True)
 
+# ===== AI PREDICTIONS =====
+if prediction and prediction.get('temperature_1h'):
+    st.markdown(f"""
+    <div class='prediction-section'>
+        <div class='prediction-title'>
+            <span> AI Mindspore</span>
+            <span class='prediction-badge'>+1 hour</span>
+        </div>
+        <div class='prediction-grid'>
+            <div class='prediction-item'>
+                <div class='prediction-label'>Temperature</div>
+                <div class='prediction-value'>{prediction['temperature_1h']:.1f}<span class='prediction-unit'>°C</span></div>
+            </div>
+            <div class='prediction-item'>
+                <div class='prediction-label'>Humidity</div>
+                <div class='prediction-value'>{prediction['humidity_1h']:.1f}<span class='prediction-unit'>%</span></div>
+            </div>
+            <div class='prediction-item'>
+                <div class='prediction-label'>Light</div>
+                <div class='prediction-value'>{prediction['light_1h']:.0f}<span class='prediction-unit'>lux</span></div>
+            </div>
+            <div class='prediction-item'>
+                <div class='prediction-label'>Soil</div>
+                <div class='prediction-value'>{prediction['soil_1h']:.1f}<span class='prediction-unit'>%</span></div>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
+# ===== AI STATUS =====
+if training_status:
+    st.markdown("""
+    <div class='status-section'>
+        <div class='status-title'> AI System Status</div>
+        <div class='status-grid'>
+    """, unsafe_allow_html=True)
 
+    if training_status.get("status") == "active":
+        st.markdown(f"""
+        <div class='status-item'>
+            <div class='status-label'>STATUS</div>
+            <div class='status-value' style='color:#34c759;'>Active</div>
+        </div>
+        <div class='status-item'>
+            <div class='status-label'>SAMPLES</div>
+            <div class='status-value'>{training_status.get('samples', 0)}</div>
+        </div>
+        <div class='status-item'>
+            <div class='status-label'>ACCURACY</div>
+            <div class='status-value'>{(training_status.get('r2_score', 0) * 100):.1f}%</div>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        st.markdown("""
+        <div style='grid-column: 1/-1; text-align: center; padding: 20px; color: #8e9aab;'>
+            ⏳ Initializing AI training...
+        </div>
+        """, unsafe_allow_html=True)
 
+    st.markdown("</div></div>", unsafe_allow_html=True)
 
+# ===== REFRESH BUTTON =====
+if st.button("🔄 Refresh Data", key="refresh"):
+    st.cache_data.clear()
+    st.rerun()
 
+# ===== FOOTER =====
+st.markdown("""
+<div class='footer'>
+    <div> Smart Greenhouse · HarmonyOS Connect</div>
+    <div style='margin-top: 8px;'>Real-time monitoring · AI-powered predictions</div>
+</div>
+""", unsafe_allow_html=True)
 
+st.markdown('</div>', unsafe_allow_html=True)
 
+# ===== AUTO-REFRESH =====
+time.sleep(5)
+st.cache_data.clear()
+st.rerun()                    
