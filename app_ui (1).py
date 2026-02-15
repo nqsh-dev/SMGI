@@ -114,7 +114,7 @@ PREDICTION_URL = "https://sufficient-puma-humiya-344b268d.koyeb.app/api/v1/predi
 #==============================
 
 def fetch_data(): 
- try: 
+  try: 
    with st.spinner("Fetching real-time data..."): 
     sensor_response = requests.get(SENSOR_URL, timeout=10) 
     prediction_response = requests.get(PREDICTION_URL, timeout=10)
@@ -127,7 +127,7 @@ def fetch_data():
 
     return sensors, prediction, None
 
-except Exception as e:
+  except Exception as e:
     return None, None, str(e)
 
 #==============================
@@ -172,6 +172,7 @@ with col4: st.metric( label="🔮 Temperature Prediction (1h)", value=f"{predict
 #==============================
 
 st.divider() st.caption(f"Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}") st.caption("System status: Online ✅")
+
 
 
 
