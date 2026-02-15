@@ -24,7 +24,7 @@ st.markdown(f"""
 
 .block-container {{
     backdrop-filter: blur(4px);
-    background-color: rgba(255,255,255,0.85);
+    background-color: rgba(255,255,255,0.25);
     border-radius: 12px;
     padding: 2rem;
 }}
@@ -76,6 +76,7 @@ with col_prediction:
             st.subheader("Prediction❄")
             st.write("⁰C")
             st.write(prediction["temperature_1h"] )
+
 
 
 
