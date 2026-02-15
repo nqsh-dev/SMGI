@@ -171,7 +171,10 @@ with col4: st.metric( label="🔮 Temperature Prediction (1h)", value=f"{predict
 
 #==============================
 
-st.divider() st.caption(f"Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}") st.caption("System status: Online ✅")
+st.divider()
+st.caption(f"Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+st.caption("System status: Online ✅")
+
 
 
 
